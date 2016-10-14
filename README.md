@@ -8,10 +8,10 @@ $bancard = new Bancard($produccion);
 $bancard->process($transaction_id, $amount);
 ```
 ## Métodos de configuración
- - *set_cancel_url($url)*: Establece la URL de respuesta de cancelación del anuncio.
- - *set_return_url($url)*: Establece la URL de respuesta de confirmación de la transacción.
- - *set_item_description($description)*: Establece la descripción del item a mostrar en la pasarela de pagos.
- - *set_response_mode*: Establece la modalidad de respuesta para el procesamiento de la transacción.
+ - **set_cancel_url($url)**: Establece la URL de respuesta de cancelación del anuncio.
+ - **set_return_url($url)**: Establece la URL de respuesta de confirmación de la transacción.
+ - **set_item_description($description)**: Establece la descripción del item a mostrar en la pasarela de pagos.
+ - **set_response_mode**: Establece la modalidad de respuesta para el procesamiento de la transacción.
  
 ## Modalidades de respuesta
 Las modalidades de respuesta disponibles son las siguientes:
