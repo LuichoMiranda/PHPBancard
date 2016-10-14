@@ -3,10 +3,10 @@ Clase para procesamiento de pagos a través de bancard
 
 ## Configuración básica
 Realizar las siguientes modificaciones en bancard.class.php
-1. Cambiar el valor de las variables privadas $return_url y $cancel_url por las URL correspondientes.
-2. Cambiar el valor de la variable privada $salt.
-3. (Opcional) Establecer una descripción para el item en la variable privada $item_description.
-4. Reemplazar los valores CLAVE_PRIVADA_PRODUCCION, CLAVE_PRIVADA_STAGING, CLAVE_PUBLICA_PRODUCCION y CLAVE_PUBLICA_STAGING por las claves correspondientes. 
+- 1. Cambiar el valor de las variables privadas $return_url y $cancel_url por las URL correspondientes.
+- 2. Cambiar el valor de la variable privada $salt.
+- 3. (Opcional) Establecer una descripción para el item en la variable privada $item_description.
+- 4. Reemplazar los valores CLAVE_PRIVADA_PRODUCCION, CLAVE_PRIVADA_STAGING, CLAVE_PUBLICA_PRODUCCION y CLAVE_PUBLICA_STAGING por las claves correspondientes. 
 
 ##Procesar una transacción
 ```
