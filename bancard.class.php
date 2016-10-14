@@ -15,6 +15,7 @@ class Bancard{
 	private $item_description;
 	private $currency_code = "PYG";
 	private $response_mode = "URL";
+	private $salt = '+PbC81_1jLd'
 
 	public function __construct($production = false){
 		$this->private_key = $production
@@ -34,6 +35,12 @@ class Bancard{
 		: 'https://vpos.infonet.com.py:8888/payment/single_buy'; /* URL de pagina de pagos en staging */
 	}
 
+	/*
+	* Procesa los datos de la transacción para obtener el process_id
+	* @transaction_id (int)
+	* @amount (double)
+	* @extra (array) - Claves: currency_code, additinal_data, item_description
+	*/
 	public function process($transaction_id, $amount, $extra = array()){
 
 		$amount = number_format($amount, 2, '.', '');
@@ -57,8 +64,8 @@ class Bancard{
 					"amount" => $amount,
 					"additional_data" => isset($extra['additional_data']) ? $extra['additional_data'] : "",
 					"description" => $this->item_description,
-					"return_url" => $this->return_url,
-					"cancel_url" => $this->cancel_url
+					"return_url" => $this->return_url . '?trid=' . md5($transaction_id . $this->salt),
+					"cancel_url" => $this->cancel_url . '?trid=' . md5($transaction_id . $this->salt)
 				)
 			)
 		);
@@ -72,7 +79,7 @@ class Bancard{
 					return $this->payment_url . "?process_id={$result->process_id}";
 					break;
 				case "REDIRECT":
-					$this->redirec($result->process_id);
+					$this->redirect($result->process_id);
 					break;
 				case "PROCESS_ID":
 					return $result->process_id;
@@ -90,13 +97,17 @@ class Bancard{
 
 	}
 
+	/*
+	* Envía petición de rollback sobre una transacción
+	* @transaction_id (int)
+	*/
 	public function rollback($transaction_id){
 		$result = $this->request(
 			"single_buy/rollback",
 			array(
 				"public_key" => $this->public_key,
 				"operation" => array(
-					"token" => md5($this->private_key . 'rollback' . '0.00'),
+					"token" => md5($this->private_key . $transaction_id .'rollback' . '0.00'),
 					"shop_process_id" => $transaction_id
 				)
 			)
@@ -105,25 +116,63 @@ class Bancard{
 		return $result;
 	}
 
+	/*
+	* Consulta de confirmación de pago
+	* @transaction_id (int)
+	*/
+	public function confirmations($transaction_id){
+		
+		$result = $this->request(
+			"single_buy/confirmations",
+			array(
+				"public_key" => $this->public_key,
+				"operation" => array(
+					"token" => md5($this->private_key . $transaction_id . 'get_confirmation'),
+					"shop_process_id" => $transaction_id
+				)
+			)
+		);
+
+		return $result;
+	}
+
+	/*
+	* Lee la respuesta enviada por bancard a la url especificada en el panel de comercios de bancard
+	*/
 	public function get_response(){
 		$response = file_get_contents("php://input");
 		return $response;
 	}
 
-	private function get_token($order, $amount){
-		return md5($this->private_key . $order . $amount . $this->currency_code);
+	/*
+	* Genera token para el método process
+	* @transaction_id (int)
+	* @amount (double)
+	*/
+	private function get_token($transaction_id, $amount){
+		return md5($this->private_key . $transaction_id . $amount . $this->currency_code);
 	}
 
+	/*
+	* Redirecciona a la página de pagos de bancard
+	* @process_id (string)
+	*/
 	private function redirect($process_id){
 		@ob_end_clean();
 		header("Location: {$this->payment_url}?process_id={$process_id}");
 		exit;
 	}
 
+	/*
+	* Establece la url de cancelación del pago
+	*/
 	public function set_cancel_url($url){
 		$this->cancel_url = $url;
 	}
 
+	/*
+	* Establece la url de confirmación del pago
+	*/
 	public function set_return_url($url){
 		$this->return_url = $url;
 	}
@@ -132,6 +181,9 @@ class Bancard{
 		$this->currency_code = $cc;
 	}
 
+	/*
+	* Establece modo de respuesta para el método process
+	*/
 	public function set_response_mode($mode){
 		switch ($mode) {
 			case "URL":
@@ -146,10 +198,16 @@ class Bancard{
 		}
 	}
 
+	/*
+	* Establece
+	*/
 	public function set_item_description($description){
 		$this->item_description = $description;
 	}
 
+	/*
+	* Envía peticiones al servicio de bancard
+	*/
 	private function request($action, $data){
 
 		$data = @json_encode($data);
@@ -166,10 +224,11 @@ class Bancard{
 	    curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
 	    curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
 	    $response = curl_exec($session);
+	    $error = curl_error($session);
 	    curl_close($session);
 
 	    if($response === false){
-	    	throw new Exception("No se pudo enviar la petición {$action}");
+	    	throw new Exception("No se pudo enviar la petición {$action}. {$error}");
 	    }else{
 	    	return $response;
 	    }
