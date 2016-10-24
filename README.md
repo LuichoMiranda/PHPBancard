@@ -32,7 +32,7 @@ Las modalidades de respuesta disponibles son las siguientes:
  $produccion = false;
  $bancard = new Bancard($produccion);
  $bancard->set_response_mode("REDIRECT")
- $bancard->process($transacion_id, $amount);
+ $bancard->process($transaction_id, $amount);
  ```
  
  ## Consultar la confirmación de pago
