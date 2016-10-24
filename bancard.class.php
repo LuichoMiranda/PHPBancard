@@ -90,6 +90,7 @@ class Bancard{
 						"url" => $this->payment_url,
 						"query_string" => "?process_id=" . $result->process_id
 					);
+					break;
 			}
 		}else{
 			throw new Exception("Imposible obtener process id");
