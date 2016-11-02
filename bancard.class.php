@@ -36,6 +36,20 @@ class Bancard{
 	}
 
 	/*
+	* Establece la clave publica desde el método
+	*/
+	public function set_public_key($key){
+		$this->public_key = $key;
+	}
+
+	/*
+	* Establece la clave privada desde el método
+	*/
+	public function set_private_key($key){
+		$this->private_key = $key;
+	}
+
+	/*
 	* Procesa los datos de la transacción para obtener el process_id
 	* @transaction_id (int)
 	* @amount (double)
