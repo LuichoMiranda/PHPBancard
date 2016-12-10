@@ -15,7 +15,7 @@ class Bancard{
 	private $item_description;
 	private $currency_code = "PYG";
 	private $response_mode = "URL";
-	private $salt = '+PbC81_1jLd'
+	private $salt = '+PbC81_1jLd';
 
 	public function __construct($production = false){
 		$this->private_key = $production
