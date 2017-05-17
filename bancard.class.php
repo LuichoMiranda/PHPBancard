@@ -1,6 +1,7 @@
 <?php
 /*
 * Luicho Miranda
+* miranda.luis (at) gmail (dot) com
 * 17/Jun/2016
 */
 class Bancard{
@@ -214,7 +215,7 @@ class Bancard{
 	}
 
 	/*
-	* Establece
+	* Establece descripción para el item
 	*/
 	public function set_item_description($description){
 		$this->item_description = $description;
