@@ -224,7 +224,7 @@ class Bancard{
 	* Envía peticiones al servicio de bancard
 	*/
 	private function request($action, $data){
-
+		
 		$data = @json_encode($data);
 
 		$headers = array(
@@ -235,18 +235,18 @@ class Bancard{
 
 		curl_setopt($session, CURLOPT_POST, true);
 		curl_setopt($session, CURLOPT_HTTPHEADER, $headers);
-	    curl_setopt($session, CURLOPT_POSTFIELDS, $data);
-	    curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
-	    curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
-	    $response = curl_exec($session);
-	    $error = curl_error($session);
-	    curl_close($session);
+		curl_setopt($session, CURLOPT_POSTFIELDS, $data);
+	    	curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
+	    	curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+	    	$response = curl_exec($session);
+	    	$error = curl_error($session);
+	    	curl_close($session);
 
-	    if($response === false){
-	    	throw new Exception("No se pudo enviar la petición {$action}. {$error}");
-	    }else{
-	    	return $response;
-	    }
+	    	if($response === false){
+			throw new Exception("No se pudo enviar la petición {$action}. {$error}");
+		}else{
+			return $response;
+		}
 
 	}
 }
