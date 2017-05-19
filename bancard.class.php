@@ -239,6 +239,7 @@ class Bancard{
 		curl_setopt($session, CURLOPT_POSTFIELDS, $data);
 	    	curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
 	    	curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($session, CURLOPT_SSLVERSION, 6);
 	    	$response = curl_exec($session);
 	    	$error = curl_error($session);
 	    	curl_close($session);
